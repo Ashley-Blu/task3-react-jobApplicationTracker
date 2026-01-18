@@ -2,6 +2,7 @@ import React from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { getJobs } from "../../utils/localStorage";
+import type { Job, EditJobData } from "../../types/index";
 import placeholder from "../../assets/placeholder.png";
 import bin from "../../assets/bin.png";
 import edit from "../../assets/edit.png";
@@ -13,26 +14,26 @@ import toast, { Toaster } from "react-hot-toast";
 export const HomePage = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     localStorage.removeItem("activeUser");
     navigate("/LoginPage");
   };
 
-  const [showModal, setShowModal] = React.useState(false);
-  const [modalJob, setModalJob] = React.useState<any | null>(null);
+  const [showModal, setShowModal] = React.useState<boolean>(false);
+  const [modalJob, setModalJob] = React.useState<Job | null>(null);
 
-  const handleViewDetails = (job: any) => {
+  const handleViewDetails = (job: Job): void => {
     setModalJob(job);
     setShowModal(true);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (): void => {
     setShowModal(false);
     setModalJob(null);
   };
 
   const [editingId, setEditingId] = React.useState<number | null>(null);
-  const [editData, setEditData] = React.useState({
+  const [editData, setEditData] = React.useState<EditJobData>({
     company: "",
     status: "",
     address: "",
@@ -42,7 +43,7 @@ export const HomePage = () => {
     notes: "",
   });
 
-  const handleEditClick = (job: any) => {
+  const handleEditClick = (job: Job): void => {
     setEditingId(job.id);
     setEditData({
       company: job.company || "",
@@ -56,14 +57,14 @@ export const HomePage = () => {
   };
 
   const handleEditInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): void => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdateJob = (id: number) => {
-    const jobsList = getJobs().map((job: any) =>
+  const handleUpdateJob = (id: number): void => {
+    const jobsList: Job[] = getJobs().map((job: Job) =>
       job.id === id
         ? {
             ...job,
@@ -75,14 +76,14 @@ export const HomePage = () => {
             requirements: editData.requirements,
             notes: editData.notes,
           }
-        : job
+        : job,
     );
     localStorage.setItem("jobs", JSON.stringify(jobsList));
     setJobs(jobsList);
     setEditingId(null);
   };
 
-  const handleDeleteJob = (id: number) => {
+  const handleDeleteJob = (id: number): void => {
     toast(
       (t) => (
         <span>
@@ -105,7 +106,7 @@ export const HomePage = () => {
                 fontWeight: "bold",
               }}
               onClick={() => {
-                const jobsList = getJobs().filter((job: any) => job.id !== id);
+                const jobsList = getJobs().filter((job: Job) => job.id !== id);
                 localStorage.setItem("jobs", JSON.stringify(jobsList));
                 setJobs(jobsList);
                 toast.dismiss(t.id);
@@ -145,15 +146,15 @@ export const HomePage = () => {
           background: "#ef6960",
         },
         duration: 6000,
-      }
+      },
     );
   };
 
-  const [jobs, setJobs] = React.useState(getJobs());
-  const [showAddForm, setShowAddForm] = React.useState(false);
-  const [error, setError] = React.useState("");
+  const [jobs, setJobs] = React.useState<Job[]>(getJobs());
+  const [showAddForm, setShowAddForm] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>("");
 
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = React.useState<EditJobData>({
     company: "",
     status: "",
     address: "",
@@ -164,19 +165,19 @@ export const HomePage = () => {
   });
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddJob = () => {
+  const handleAddJob = (): void => {
     setError("");
     if (!formData.company || !formData.status) {
       setError("Please fill in all required fields");
       return;
     }
-    const newJob = {
+    const newJob: Job = {
       id: Date.now(),
       company: formData.company,
       status: formData.status,
@@ -186,7 +187,7 @@ export const HomePage = () => {
       requirements: formData.requirements,
       notes: formData.notes,
     };
-    const updatedJobs = [...jobs, newJob];
+    const updatedJobs: Job[] = [...jobs, newJob];
     localStorage.setItem("jobs", JSON.stringify(updatedJobs));
     setJobs(updatedJobs);
     setFormData({
@@ -423,7 +424,7 @@ export const HomePage = () => {
           {/* Job list */}
           <div style={{ maxHeight: "60vh", overflowY: "auto", marginTop: 24 }}>
             <ul style={{ listStyle: "none", padding: 0 }}>
-              {jobs.map((job: any) => (
+              {jobs.map((job: Job) => (
                 <li
                   key={job.id}
                   style={{

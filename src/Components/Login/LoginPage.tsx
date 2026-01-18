@@ -3,25 +3,26 @@ import "./Login.css";
 import image from "../../assets/signup.png";
 import { useNavigate } from "react-router-dom";
 import { getUsers, setActiveUser } from "../../utils/localStorage";
+import type { LoginFormData } from "../../types/index";
 import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = React.useState<LoginFormData>({
     username: "",
     password: "",
   });
-  const [error, setError] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
+  const [error, setError] = React.useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleLogin = () => {
+  const handleLogin = (): void => {
     setError("");
     setSuccess(false);
     setLoading(true);
@@ -33,8 +34,8 @@ export const LoginPage = () => {
       }
       const users = getUsers();
       const user = users.find(
-        (u: any) =>
-          u.username === formData.username && u.password === formData.password
+        (u) =>
+          u.username === formData.username && u.password === formData.password,
       );
       if (!user) {
         setError("Invalid username or password");

@@ -3,25 +3,26 @@ import "./Signup.css";
 import sign from "../../assets/signup.png";
 import { useNavigate, Link } from "react-router-dom";
 import { saveUser, getUserByEmail } from "../../utils/localStorage";
+import type { SignupFormData } from "../../types/index";
 import toast, { Toaster } from "react-hot-toast";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = React.useState<SignupFormData>({
     email: "",
     username: "",
     password: "",
   });
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const [errors, setErrors] = useState<{ [k: string]: string }>({});
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onSignUp = (e: React.FormEvent) => {
+  const onSignUp = (e: React.FormEvent): void => {
     e.preventDefault();
 
     const newErrors: { [k: string]: string } = {};
@@ -36,7 +37,7 @@ export const SignupPage = () => {
     if (Object.keys(newErrors).length > 0) return;
   };
 
-  const handleSignup = () => {
+  const handleSignup = (): void => {
     setLoading(true);
 
     setTimeout(() => {

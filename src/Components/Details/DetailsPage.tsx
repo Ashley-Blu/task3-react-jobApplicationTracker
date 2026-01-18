@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./Details.css";
 import { useParams } from "react-router-dom";
+import type { Job } from "../../types/index";
 
-const jobs = [
+const jobs: Job[] = [
   {
     id: 1,
     jobTitle: "Frontend Developer",
@@ -37,14 +38,18 @@ const jobs = [
   },
 ];
 
+interface DetailsPageParams {
+  id?: string;
+}
+
 const DetailsPage = () => {
-  const { id } = useParams();
-  const job = jobs.find((j) => j.id === Number(id));
-  const [details, setDetails] = useState(job || jobs[0]);
+  const { id } = useParams<DetailsPageParams>();
+  const job = jobs.find((j: Job) => j.id === Number(id));
+  const [details, setDetails] = useState<Job>(job || jobs[0]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): void => {
     setDetails({ ...details, [e.target.name]: e.target.value });
   };
 
